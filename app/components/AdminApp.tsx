@@ -13,6 +13,9 @@ import { Auth0AuthProvider } from "ra-auth-auth0";
 // import { Auth0AuthProvider } from "./Auth0AuthProvider";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { logger } from "../api/node/logger";
+import { useEffect, useState } from "react";
+import Login from "./Login";
+import { useRouter } from "next/navigation";
 
 const auth0 = new Auth0Client({
   domain: "dev-fhno5ut8s4ytjvlb.jp.auth0.com",
@@ -26,21 +29,19 @@ const auth0AuthProvider = Auth0AuthProvider(auth0, {
 });
 
 const AdminApp = () => {
-  logger.info(auth0AuthProvider)
   const dataProvider = simpleRestProvider(`${window.location.origin}/api`);
   return (
     <BrowserRouter>
       <Routes>
 
       <Route path="/" element={<Navigate to="/admin" replace />} />
-
         <Route path="/admin/*" index element={
           <Admin
             dataProvider={dataProvider}
             basename="/admin"
-            authProvider={auth0AuthProvider}
-            requireAuth
-            theme={theme}>
+            // requireAuth
+            theme={theme}
+            >
             <Resource
               name="node"
               list={NodeList}

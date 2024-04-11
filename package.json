@@ -31,6 +31,7 @@
     "react-admin": "^4.14.1",
     "react-dom": "18.2.0",
     "ssh2": "^1.14.0",
+    "styled-components": "^6.1.8",
     "typescript": "5.2.2"
   },
   "devDependencies": {
