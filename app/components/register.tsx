@@ -1,4 +1,5 @@
 'use client';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -121,7 +122,23 @@ const Register = () => {
     }
     if(password === checkpw){
         //회원가입 ㄱㄱ
-        console.log('회원가입 가능')
+        const register_data = {
+          user_email : userid,
+          user_pw : password,
+          user_name : username,
+          user_phone : phone
+        }
+        try{
+          const response = await axios.post('http://localhost:4000/user/',register_data);
+          if(response.status === 201){
+            localStorage.setItem('jwt',response.data);
+            router.push('/');
+          }else{
+            setError('로그인에 실패하였습니다.')
+          }
+        }catch(error:any){
+          setError(error.response.data.message)
+        }
     }
   };
 

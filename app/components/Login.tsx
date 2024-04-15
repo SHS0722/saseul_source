@@ -1,4 +1,5 @@
 'use client';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -81,10 +82,21 @@ const Login = () => {
   const router = useRouter();
 
   const handleLogin = async () => {
-    // 로그인 로직 구현
-    // 예: API 호출 후 성공 시 다음 페이지로 이동
-    // 실패 시 에러 메시지 설정
-    router.push('/');
+    const login_data = {
+      user_email : username,
+      user_pw : password
+    }
+    try{
+      const response = await axios.post('http://localhost:4000/user/login',login_data);
+      if(response.status === 201){
+        localStorage.setItem('jwt',response.data);
+        router.push('/');
+      }else{
+        setError('로그인에 실패하였습니다.')
+      }
+    }catch(error:any){
+      setError(error.response.data.message)
+    }
   };
 
   return (
