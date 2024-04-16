@@ -16,6 +16,7 @@ import { logger } from "../api/node/logger";
 import { useEffect, useState } from "react";
 import Login from "./Login";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const auth0 = new Auth0Client({
   domain: "dev-fhno5ut8s4ytjvlb.jp.auth0.com",
@@ -30,6 +31,7 @@ const auth0AuthProvider = Auth0AuthProvider(auth0, {
 
 const AdminApp = () => {
   const dataProvider = simpleRestProvider(`${window.location.origin}/api`);
+
   return (
     <BrowserRouter>
       <Routes>

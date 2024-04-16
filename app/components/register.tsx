@@ -129,7 +129,7 @@ const Register = () => {
           user_phone : phone
         }
         try{
-          const response = await axios.post('http://localhost:4000/user/',register_data);
+          const response = await axios.post('http://15.164.77.173:4000/user/',register_data);
           if(response.status === 201){
             localStorage.setItem('jwt',response.data);
             router.push('/');

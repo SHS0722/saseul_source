@@ -19,7 +19,7 @@ const Home: NextPage = () => {
             }else {
                 console.log(jwt)
                 try{
-                    const response = await axios.post('http://localhost:4000/user/check',null,{
+                    const response = await axios.post('http://15.164.77.173:4000/user/check',null,{
                         headers: {
                             'Authorization': `Bearer ${jwt}`
                         }

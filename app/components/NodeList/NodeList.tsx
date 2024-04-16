@@ -19,7 +19,8 @@ import { SxProps } from "@mui/system";
 import { GreenDoneIcon } from "./GreenDoneIcon";
 import { logger } from "@/app/api/node/logger";
 import { useEffect } from "react";
-
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface RecordType extends ContainerInfo {
   id: string,
@@ -34,12 +35,39 @@ interface NodeListProps extends React.ComponentProps<typeof List<RecordType>> { 
 export default function NodeList(props: NodeListProps) {
   const { data, isLoading, refetch } = useGetOne<{ id: "refresh", value: boolean }>('option', { id: 'refresh' })
   const refresh = useRefresh();
+
   const setRefresh = () => {
     // refetch();
     if(data?.id && data?.value) {
       refresh();
     }
   }
+  const router = useRouter();
+  const checkLoginStatus = async () => {
+    const jwt = localStorage.getItem('jwt');
+    if(jwt === null){
+        router.push('/login')
+    }else {
+        try{
+            const response = await axios.post('http://15.164.77.173:4000/user/check',null,{
+                headers: {
+                    'Authorization': `Bearer ${jwt}`
+                }
+            });
+        }catch(error){
+            router.push('/login')
+        }
+        
+    }
+};
+  useEffect(() => {
+    console.log("setInterval")
+    const intervalId = setInterval(checkLoginStatus,60000)
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [])
   useEffect(() => {
     console.log("setInterval")
     setInterval(setRefresh, 1000 * 20)
