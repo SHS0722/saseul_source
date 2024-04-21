@@ -18,7 +18,7 @@ import { ContainerInfo } from "dockerode";
 import { SxProps } from "@mui/system";
 import { GreenDoneIcon } from "./GreenDoneIcon";
 import { logger } from "@/app/api/node/logger";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -35,25 +35,40 @@ interface NodeListProps extends React.ComponentProps<typeof List<RecordType>> { 
 export default function NodeList(props: NodeListProps) {
   const { data, isLoading, refetch } = useGetOne<{ id: "refresh", value: boolean }>('option', { id: 'refresh' })
   const refresh = useRefresh();
-
+  const [ miner, setMiner ] = useState('');
+  const [ resource, setResource ] = useState('');
   const setRefresh = () => {
     // refetch();
     if(data?.id && data?.value) {
       refresh();
     }
   }
+  let user;
   const router = useRouter();
   const checkLoginStatus = async () => {
+    let server = 'http://15.164.77.173:4000/'
+    let local_server = 'http://localhost:4000/'
     const jwt = localStorage.getItem('jwt');
+
     if(jwt === null){
         router.push('/login')
     }else {
+
         try{
-            const response = await axios.post('http://15.164.77.173:4000/user/check',null,{
+            const response = await axios.post(`${server}user/check`,null,{
                 headers: {
                     'Authorization': `Bearer ${jwt}`
                 }
             });
+            user = response.data;
+            if(miner !== ''){
+              const data ={
+                "public_key" : miner
+              }
+              const responses = await axios.post(`http://saseul-admin.store/resource`,data);
+              const res_data = responses.data.data;
+              setResource(res_data);
+            }
         }catch(error){
             router.push('/login')
         }
@@ -63,7 +78,6 @@ export default function NodeList(props: NodeListProps) {
   useEffect(() => {
     console.log("setInterval")
     const intervalId = setInterval(checkLoginStatus,60000)
-
     return () => {
       clearInterval(intervalId);
     };
@@ -74,6 +88,11 @@ export default function NodeList(props: NodeListProps) {
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
+    if(record?.env?.miner !== ''){
+      if(record?.env?.miner !== miner){
+        setMiner(record?.env?.miner);
+      }
+    }
     if (record?.info?.data?.status !== "is_running") {
       return {
         border: "3px solid red",
@@ -86,7 +105,9 @@ export default function NodeList(props: NodeListProps) {
   }
 
   return (
-    <List
+    <>
+      {miner? <span>Resource : {resource}</span>:null}
+      <List
       {...props}
       actions={<NodeActions />}
       pagination={false}
@@ -132,5 +153,7 @@ export default function NodeList(props: NodeListProps) {
         />
       </Datagrid>
     </List>
+    </>
+
   );
 }

@@ -78,16 +78,18 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
   const router = useRouter();
 
   const handleLogin = async () => {
+    let myip = '';
+    let server = 'http://15.164.77.173:4000/'
+    let local_server = 'http://localhost:4000/'
     const login_data = {
       user_email : username,
       user_pw : password
     }
     try{
-      const response = await axios.post('http://15.164.77.173:4000/user/login',login_data);
+      const response = await axios.post(`${server}user/login`,login_data);
       if(response.status === 201){
         localStorage.setItem('jwt',response.data);
         router.push('/');
