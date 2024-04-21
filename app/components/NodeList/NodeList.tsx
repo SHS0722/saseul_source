@@ -51,8 +51,10 @@ export default function NodeList(props: NodeListProps) {
       }
       const responses = await axios.post(`http://saseul-admin.store/resource`,data);
       const res_data = responses.data.resource;
-      console.log(res_data)
-      setResource(res_data);
+      let formattedNumber = (res_data / 1e18).toPrecision(21);
+      console.log(formattedNumber)
+
+      setResource(formattedNumber);
 
   }
   const checkLoginStatus = async () => {
