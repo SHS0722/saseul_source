@@ -45,7 +45,7 @@ export default function NodeList(props: NodeListProps) {
   }
   let miner_adress = '';
   const router = useRouter();
-  const checkLoginStatus = async () => {
+  const checkLoginStatus = async (adress: string) => {
     let server = 'http://15.164.77.173:4000/'
     let local_server = 'http://localhost:4000/'
     const jwt = localStorage.getItem('jwt');
@@ -60,10 +60,10 @@ export default function NodeList(props: NodeListProps) {
                     'Authorization': `Bearer ${jwt}`
                 }
             });
-            console.log(miner_adress);
-            if(miner_adress !== ''){
+            console.log(adress);
+            if(adress !== ''){
               const data ={
-                "public_key" : miner_adress
+                "public_key" : adress
               }
               const responses = await axios.post(`http://saseul-admin.store/resource`,data);
               const res_data = responses.data.resource;
@@ -78,7 +78,7 @@ export default function NodeList(props: NodeListProps) {
 };
   useEffect(() => {
     console.log("setInterval")
-    const intervalId = setInterval(checkLoginStatus,60000)
+    const intervalId = setInterval(() => {checkLoginStatus(miner_adress)},60000)
     return () => {
       clearInterval(intervalId);
     };
@@ -89,8 +89,7 @@ export default function NodeList(props: NodeListProps) {
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
-    console.log(idx);
-    if(idx === 0){
+      console.log(idx)
       if(record?.env?.miner !== ''){
         console.log('env miner 있음',record?.env?.miner)
         if(record?.env?.miner !== miner_adress){
@@ -101,7 +100,7 @@ export default function NodeList(props: NodeListProps) {
           console.log('miner설정 ', miner_adress)
         }
       }
-    }
+    
 
     if (record?.info?.data?.status !== "is_running") {
       return {
@@ -116,7 +115,7 @@ export default function NodeList(props: NodeListProps) {
 
   return (
     <>
-      {miner !== ''? <span>Resource : {resource}</span>:null}
+      {resource !== ''? <span>Resource : {resource}</span>:null}
       <List
       {...props}
       actions={<NodeActions />}
