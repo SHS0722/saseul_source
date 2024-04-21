@@ -89,16 +89,20 @@ export default function NodeList(props: NodeListProps) {
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
-    if(record?.env?.miner !== ''){
-      console.log('env miner 있음')
-      if(record?.env?.miner !== miner_adress){
-        console.log('miner 설정 안됨')
-        const miner_adresss = record?.env?.miner;
-        console.log(miner_adresss,'변수 할당')
-        miner_adress = miner_adresss;
-        console.log('miner설정 ', miner_adress)
+    console.log(idx);
+    if(idx === 0){
+      if(record?.env?.miner !== ''){
+        console.log('env miner 있음',record?.env?.miner)
+        if(record?.env?.miner !== miner_adress){
+          console.log('miner 설정 안됨')
+          const miner_adresss = record?.env?.miner;
+          console.log(miner_adresss,'변수 할당')
+          miner_adress = miner_adresss;
+          console.log('miner설정 ', miner_adress)
+        }
       }
     }
+
     if (record?.info?.data?.status !== "is_running") {
       return {
         border: "3px solid red",
