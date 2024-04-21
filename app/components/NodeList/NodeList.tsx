@@ -60,7 +60,6 @@ export default function NodeList(props: NodeListProps) {
                     'Authorization': `Bearer ${jwt}`
                 }
             });
-            user = response.data;
             console.log(miner);
             if(miner !== ''){
               const data ={
@@ -91,8 +90,13 @@ export default function NodeList(props: NodeListProps) {
 
   function rowSx(record: RecordType, idx: number): SxProps {
     if(record?.env?.miner !== ''){
+      console.log('env miner 있음')
       if(record?.env?.miner !== miner){
-        setMiner(record?.env?.miner);
+        console.log('miner 설정 안됨')
+        const miner_adress = record?.env?.miner;
+        console.log(miner_adress,'변수 할당')
+        setMiner(miner_adress);
+        console.log('miner설정 ', miner)
       }
     }
     if (record?.info?.data?.status !== "is_running") {
