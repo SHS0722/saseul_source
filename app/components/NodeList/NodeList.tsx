@@ -67,6 +67,7 @@ export default function NodeList(props: NodeListProps) {
               }
               const responses = await axios.post(`http://saseul-admin.store/resource`,data);
               const res_data = responses.data.resource;
+              console.log(res_data)
               setResource(res_data);
             }
         }catch(error){
