@@ -45,7 +45,17 @@ export default function NodeList(props: NodeListProps) {
   }
   let miner_adress = '';
   const router = useRouter();
-  const checkLoginStatus = async (adress: string) => {
+  const checkResource = async(adress: string) => {
+      const data ={
+        "public_key" : adress
+      }
+      const responses = await axios.post(`http://saseul-admin.store/resource`,data);
+      const res_data = responses.data.resource;
+      console.log(res_data)
+      setResource(res_data);
+
+  }
+  const checkLoginStatus = async () => {
     let server = 'http://15.164.77.173:4000/'
     let local_server = 'http://localhost:4000/'
     const jwt = localStorage.getItem('jwt');
@@ -60,16 +70,7 @@ export default function NodeList(props: NodeListProps) {
                     'Authorization': `Bearer ${jwt}`
                 }
             });
-            console.log(adress);
-            if(adress !== ''){
-              const data ={
-                "public_key" : adress
-              }
-              const responses = await axios.post(`http://saseul-admin.store/resource`,data);
-              const res_data = responses.data.resource;
-              console.log(res_data)
-              setResource(res_data);
-            }
+
         }catch(error){
             router.push('/login')
         }
@@ -78,7 +79,7 @@ export default function NodeList(props: NodeListProps) {
 };
   useEffect(() => {
     console.log("setInterval")
-    const intervalId = setInterval(() => {checkLoginStatus(miner_adress)},60000)
+    const intervalId = setInterval(checkLoginStatus,60000)
     return () => {
       clearInterval(intervalId);
     };
@@ -90,16 +91,14 @@ export default function NodeList(props: NodeListProps) {
 
   function rowSx(record: RecordType, idx: number): SxProps {
       console.log(idx)
-      if(record?.env?.miner !== ''){
-        console.log('env miner 있음',record?.env?.miner)
-        if(record?.env?.miner !== miner_adress){
-          console.log('miner 설정 안됨')
-          const miner_adresss = record?.env?.miner;
-          console.log(miner_adresss,'변수 할당')
-          miner_adress = miner_adresss;
-          console.log('miner설정 ', miner_adress)
+      if(idx === 0){
+        if(record?.env?.miner !== ''){
+          console.log('env miner 있음',record?.env?.miner)
+          const adress = record?.env?.miner;
+          checkResource(adress);
         }
       }
+
     
 
     if (record?.info?.data?.status !== "is_running") {
