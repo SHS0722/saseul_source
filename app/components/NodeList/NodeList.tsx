@@ -61,6 +61,7 @@ export default function NodeList(props: NodeListProps) {
                 }
             });
             user = response.data;
+            console.log(miner);
             if(miner !== ''){
               const data ={
                 "public_key" : miner
@@ -89,7 +90,6 @@ export default function NodeList(props: NodeListProps) {
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
-    console.log(record?.env?.miner)
     if(record?.env?.miner !== ''){
       if(record?.env?.miner !== miner){
         setMiner(record?.env?.miner);
@@ -108,7 +108,7 @@ export default function NodeList(props: NodeListProps) {
 
   return (
     <>
-      {miner? <span>Resource : {resource}</span>:null}
+      {miner !== ''? <span>Resource : {resource}</span>:null}
       <List
       {...props}
       actions={<NodeActions />}
