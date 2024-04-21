@@ -43,7 +43,7 @@ export default function NodeList(props: NodeListProps) {
       refresh();
     }
   }
-  let user;
+  let miner_adress = '';
   const router = useRouter();
   const checkLoginStatus = async () => {
     let server = 'http://15.164.77.173:4000/'
@@ -60,10 +60,10 @@ export default function NodeList(props: NodeListProps) {
                     'Authorization': `Bearer ${jwt}`
                 }
             });
-            console.log(miner);
-            if(miner !== ''){
+            console.log(miner_adress);
+            if(miner_adress !== ''){
               const data ={
-                "public_key" : miner
+                "public_key" : miner_adress
               }
               const responses = await axios.post(`http://saseul-admin.store/resource`,data);
               const res_data = responses.data.resource;
@@ -91,12 +91,12 @@ export default function NodeList(props: NodeListProps) {
   function rowSx(record: RecordType, idx: number): SxProps {
     if(record?.env?.miner !== ''){
       console.log('env miner 있음')
-      if(record?.env?.miner !== miner){
+      if(record?.env?.miner !== miner_adress){
         console.log('miner 설정 안됨')
-        const miner_adress = record?.env?.miner;
-        console.log(miner_adress,'변수 할당')
-        setMiner(miner_adress);
-        console.log('miner설정 ', miner)
+        const miner_adresss = record?.env?.miner;
+        console.log(miner_adresss,'변수 할당')
+        miner_adress = miner_adresss;
+        console.log('miner설정 ', miner_adress)
       }
     }
     if (record?.info?.data?.status !== "is_running") {
