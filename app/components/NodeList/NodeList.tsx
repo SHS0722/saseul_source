@@ -78,22 +78,18 @@ export default function NodeList(props: NodeListProps) {
     }
 };
   useEffect(() => {
-    console.log("setInterval")
     const intervalId = setInterval(checkLoginStatus,60000)
     return () => {
       clearInterval(intervalId);
     };
   }, [])
   useEffect(() => {
-    console.log("setInterval")
     setInterval(setRefresh, 1000 * 20)
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
-      console.log(idx)
       if(idx === 0){
         if(record?.env?.miner !== ''){
-          console.log('env miner 있음',record?.env?.miner)
           const adress = record?.env?.miner;
           checkResource(adress);
         }
