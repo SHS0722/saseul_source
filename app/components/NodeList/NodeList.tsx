@@ -88,6 +88,7 @@ export default function NodeList(props: NodeListProps) {
   }, [])
 
   function rowSx(record: RecordType, idx: number): SxProps {
+    console.log(record?.env?.miner)
     if(record?.env?.miner !== ''){
       if(record?.env?.miner !== miner){
         setMiner(record?.env?.miner);
